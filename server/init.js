@@ -4,6 +4,7 @@ const cors = require("cors");
 const debug = require("debug")("api-myrythm:servidor:init");
 const chalk = require("chalk");
 const morganfreeman = require("morgan");
+const { listarGeneros } = require("../db/controller/genero");
 
 const app = express();
 
@@ -18,8 +19,9 @@ const iniciaServidor = () => {
   app.use(cors());
   app.use(express.json());
 
-  app.get("/activo", (req, res, next) => {
-    res.json({ mensaje: "saliendo del poso" });
+  app.get("/generos", async (req, res, next) => {
+    const generos = await listarGeneros();
+    res.json(generos);
   });
   servidor.on("error", (err) => {
     debug(
