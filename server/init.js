@@ -9,6 +9,7 @@ const { listarAmigosPorId } = require("../db/controller/amigos");
 const { listarMatchesPorId } = require("../db/controller/matches");
 const { listarArtistas } = require("../db/controller/artista");
 const { listarHistorialPorUsuario } = require("../db/controller/historial");
+const { listarListasReproduccionPorUsuario } = require("../db/controller/listaReproduccion");
 
 const app = express();
 
@@ -50,6 +51,13 @@ const iniciaServidor = () => {
   app.get("/historial/:idUsuario", async (req, res, next) => {
     const { idUsuario } = req.params;
     const lista = await listarHistorialPorUsuario(idUsuario);
+
+    res.json(lista);
+  });
+
+  app.get("/listasReproduccion/:idUsuario", async (req, res, next) => {
+    const { idUsuario } = req.params;
+    const lista = await listarListasReproduccionPorUsuario(idUsuario);
 
     res.json(lista);
   });
