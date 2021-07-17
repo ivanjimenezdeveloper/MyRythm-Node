@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+require("./User");
 
 const AmigosSchema = new Schema({
   amigos: [

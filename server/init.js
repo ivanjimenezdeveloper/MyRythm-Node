@@ -5,6 +5,8 @@ const debug = require("debug")("api-myrythm:servidor:init");
 const chalk = require("chalk");
 const morganfreeman = require("morgan");
 const { listarGeneros } = require("../db/controller/genero");
+const { listarAmigosPorId } = require("../db/controller/amigos");
+const { listarMatchesPorId } = require("../db/controller/matches");
 
 const app = express();
 
@@ -23,6 +25,20 @@ const iniciaServidor = () => {
     const generos = await listarGeneros();
     res.json(generos);
   });
+
+  app.get("/amigos/:idUsuario", async (req, res, next) => {
+    const { idUsuario } = req.params;
+    const lista = await listarAmigosPorId(idUsuario);
+
+    res.json(lista);
+  });
+  app.get("/matches/:idUsuario", async (req, res, next) => {
+    const { idUsuario } = req.params;
+    const lista = await listarMatchesPorId(idUsuario);
+
+    res.json(lista);
+  });
+
   servidor.on("error", (err) => {
     debug(
       chalk.red.bold(`Error al iniciar el servidor en el puerto ${puerto}`)
