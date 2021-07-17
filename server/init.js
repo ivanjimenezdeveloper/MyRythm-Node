@@ -7,6 +7,8 @@ const morganfreeman = require("morgan");
 const { listarGeneros } = require("../db/controller/genero");
 const { listarAmigosPorId } = require("../db/controller/amigos");
 const { listarMatchesPorId } = require("../db/controller/matches");
+const { listarArtistas } = require("../db/controller/artista");
+const { listarHistorialPorUsuario } = require("../db/controller/historial");
 
 const app = express();
 
@@ -32,9 +34,22 @@ const iniciaServidor = () => {
 
     res.json(lista);
   });
+
   app.get("/matches/:idUsuario", async (req, res, next) => {
     const { idUsuario } = req.params;
     const lista = await listarMatchesPorId(idUsuario);
+
+    res.json(lista);
+  });
+
+  app.get("/artista/artistas", async (req, res, next) => {
+    const lista = await listarArtistas();
+
+    res.json(lista);
+  });
+  app.get("/historial/:idUsuario", async (req, res, next) => {
+    const { idUsuario } = req.params;
+    const lista = await listarHistorialPorUsuario(idUsuario);
 
     res.json(lista);
   });

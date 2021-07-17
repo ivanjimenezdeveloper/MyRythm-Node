@@ -1,4 +1,6 @@
 const { Schema, model } = require("mongoose");
+require("./Artista");
+require("./Genero");
 
 const CancionSchema = new Schema({
   url: { type: String, unique: true, required: true },
