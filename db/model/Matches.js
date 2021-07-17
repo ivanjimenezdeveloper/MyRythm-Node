@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+require("./User");
 
 const MathesSchema = new Schema({
   matches: [

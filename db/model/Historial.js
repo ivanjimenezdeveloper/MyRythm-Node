@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+require("./Cancion");
 
 const HistorialSchema = new Schema({
   canciones: [

@@ -5,6 +5,15 @@ const debug = require("debug")("api-myrythm:servidor:init");
 const chalk = require("chalk");
 const morganfreeman = require("morgan");
 const { listarGeneros } = require("../db/controller/genero");
+const { listarAmigosPorId } = require("../db/controller/amigos");
+const { listarMatchesPorId } = require("../db/controller/matches");
+const { listarArtistas } = require("../db/controller/artista");
+const { listarHistorialPorUsuario } = require("../db/controller/historial");
+const {
+  listarListasReproduccionPorUsuario,
+} = require("../db/controller/listaReproduccion");
+const { listarLocalizaciones } = require("../db/controller/localizacion");
+const { getUsuario } = require("../db/controller/user");
 
 const app = express();
 
@@ -23,6 +32,53 @@ const iniciaServidor = () => {
     const generos = await listarGeneros();
     res.json(generos);
   });
+
+  app.get("/amigos/:idUsuario", async (req, res, next) => {
+    const { idUsuario } = req.params;
+    const lista = await listarAmigosPorId(idUsuario);
+
+    res.json(lista);
+  });
+
+  app.get("/matches/:idUsuario", async (req, res, next) => {
+    const { idUsuario } = req.params;
+    const lista = await listarMatchesPorId(idUsuario);
+
+    res.json(lista);
+  });
+
+  app.get("/artista/artistas", async (req, res, next) => {
+    const lista = await listarArtistas();
+
+    res.json(lista);
+  });
+  app.get("/historial/:idUsuario", async (req, res, next) => {
+    const { idUsuario } = req.params;
+    const lista = await listarHistorialPorUsuario(idUsuario);
+
+    res.json(lista);
+  });
+
+  app.get("/listasReproduccion/:idUsuario", async (req, res, next) => {
+    const { idUsuario } = req.params;
+    const lista = await listarListasReproduccionPorUsuario(idUsuario);
+
+    res.json(lista);
+  });
+
+  app.get("/usuario/:idUsuario", async (req, res, next) => {
+    const { idUsuario } = req.params;
+    const lista = await getUsuario(idUsuario);
+
+    res.json(lista);
+  });
+
+  app.get("/localizacion/localizaciones", async (req, res, next) => {
+    const lista = await listarLocalizaciones();
+
+    res.json(lista);
+  });
+
   servidor.on("error", (err) => {
     debug(
       chalk.red.bold(`Error al iniciar el servidor en el puerto ${puerto}`)
