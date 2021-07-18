@@ -13,7 +13,7 @@ const {
   listarListasReproduccionPorUsuario,
 } = require("../db/controller/listaReproduccion");
 const { listarLocalizaciones } = require("../db/controller/localizacion");
-const { getUsuario } = require("../db/controller/user");
+const routerUsuario = require("./rutas/user");
 
 const app = express();
 
@@ -28,6 +28,7 @@ const iniciaServidor = () => {
   app.use(cors());
   app.use(express.json());
 
+  app.use("/usuario", routerUsuario);
   app.get("/generos", async (req, res, next) => {
     const generos = await listarGeneros();
     res.json(generos);
@@ -62,13 +63,6 @@ const iniciaServidor = () => {
   app.get("/listasReproduccion/:idUsuario", async (req, res, next) => {
     const { idUsuario } = req.params;
     const lista = await listarListasReproduccionPorUsuario(idUsuario);
-
-    res.json(lista);
-  });
-
-  app.get("/usuario/:idUsuario", async (req, res, next) => {
-    const { idUsuario } = req.params;
-    const lista = await getUsuario(idUsuario);
 
     res.json(lista);
   });

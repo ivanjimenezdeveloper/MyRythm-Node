@@ -6,4 +6,10 @@ const getUsuario = (idUsuario) => {
   return usuario;
 };
 
-module.exports = { getUsuario };
+const loginUsuario = (username, password) => {
+  const usuario = User.findOne({ username, password });
+
+  return usuario || false;
+};
+
+module.exports = { getUsuario, loginUsuario };
