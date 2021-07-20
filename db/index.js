@@ -30,11 +30,11 @@ const conectaMongo = async (callback) => {
       }
       debug(chalk.magentaBright("Base de datos iniciada"));
 
-      reproduccionCancion(
-        "60f14180752b265a55524aa9",
-        "60f677b956b29b26f4209fd5"
-      );
-      // callback();
+      // reproduccionCancion(
+      //   "60f14180752b265a55524aa9",
+      //   "60f14390752b265a55524ad2"
+      // );
+      callback();
     }
   );
 };
