@@ -56,13 +56,13 @@ const reproduccionCancion = async (idCancion, idUsuario) => {
             500
           );
           throw error;
-        } else {
-          await generarGenerosFavoritos(
-            await listarHistorialPorUsuario(idUsuario),
-            idUsuario
-          );
         }
       }
+    );
+
+    await generarGenerosFavoritos(
+      await listarHistorialPorUsuario(idUsuario),
+      idUsuario
     );
 
     if (!existeCancion) {
