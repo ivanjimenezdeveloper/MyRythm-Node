@@ -8,4 +8,18 @@ const listarMatchesPorId = async (idUsuario) => {
   return lista;
 };
 
-module.exports = { listarMatchesPorId };
+const crearListaMatches = (idUser, sesion) => {
+  try {
+    const matches = Matches.create({
+      matches: [],
+      user: idUser,
+    });
+  } catch (err) {
+    const error = new Error("No se ha podido crear la lista de matches");
+    error.codigo = 500;
+    throw error;
+  }
+  return true;
+};
+
+module.exports = { listarMatchesPorId, crearListaMatches };

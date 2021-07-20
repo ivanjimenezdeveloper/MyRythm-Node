@@ -3,7 +3,9 @@ const debug = require("debug")("api-myrythm:db:conexion");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
 
-const conectaMongo = (callback) => {
+let sesion;
+
+const conectaMongo = async (callback) => {
   mongoose.connect(
     process.env.MONGODB_URL,
     {
@@ -24,4 +26,4 @@ const conectaMongo = (callback) => {
   );
 };
 
-module.exports = conectaMongo;
+module.exports = { conectaMongo, sesion };
