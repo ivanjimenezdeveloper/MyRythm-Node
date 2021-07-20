@@ -1,5 +1,8 @@
 const express = require("express");
-const { listarHistorialPorUsuario } = require("../../db/controller/historial");
+const {
+  listarHistorialPorUsuario,
+  reproduccionCancion,
+} = require("../../db/controller/historial");
 
 const router = express.Router();
 
@@ -15,6 +18,17 @@ router.get("/:idUsuario", async (req, res, next) => {
     } else {
       res.json(lista);
     }
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/reproducirCancion/:idCancion", async (req, res, next) => {
+  const { idCancion } = req.params;
+
+  try {
+    reproduccionCancion(idCancion, req.idUsuario);
+    res.json({ estado: true });
   } catch (err) {
     next(err);
   }

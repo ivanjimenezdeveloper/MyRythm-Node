@@ -2,7 +2,10 @@ require("dotenv").config();
 const debug = require("debug")("api-myrythm:db:conexion");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
-const { listarHistorialPorUsuario } = require("./controller/historial");
+const {
+  listarHistorialPorUsuario,
+  reproduccionCancion,
+} = require("./controller/historial");
 const {
   updatePasswordUsuarioPorId,
   generarGenerosFavoritos,
@@ -26,9 +29,10 @@ const conectaMongo = async (callback) => {
         return;
       }
       debug(chalk.magentaBright("Base de datos iniciada"));
-      await generarGenerosFavoritos(
-        await listarHistorialPorUsuario("60f141b0752b265a55524aba"),
-        "60f141b0752b265a55524aba"
+
+      reproduccionCancion(
+        "60f14180752b265a55524aa9",
+        "60f677b956b29b26f4209fd5"
       );
       // callback();
     }
