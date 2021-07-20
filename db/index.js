@@ -2,6 +2,7 @@ require("dotenv").config();
 const debug = require("debug")("api-myrythm:db:conexion");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
+const { updatePasswordUsuarioPorId } = require("./controller/user");
 
 let sesion;
 

@@ -20,22 +20,33 @@ const router = express.Router();
 
 router.post("/login", async (req, res, next) => {
   const { user, pass } = req.body;
-  const resultadoUsuario = await loginUsuario(user, pass);
+  try {
+    const resultadoUsuario = await loginUsuario(user, pass);
 
-  if (!resultadoUsuario) {
-    const err = new Error("el nombre de usuario o contraseña no coincide");
-    err.codigo = 400;
+    if (!resultadoUsuario) {
+      const err = new Error("el nombre de usuario o contraseña no coincide");
+      err.codigo = 400;
+      next(err);
+    } else {
+      const resultadoUsuarioSeguro = {
+        _id: resultadoUsuario._id,
+        username: resultadoUsuario.username,
+        urlFoto: resultadoUsuario.urlFoto,
+        localizacion: resultadoUsuario.localizacion,
+        email: resultadoUsuario.email,
+      };
+      const token = jwt.sign(
+        { usuario: resultadoUsuarioSeguro },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "30d",
+        }
+      );
+
+      res.json({ token });
+    }
+  } catch (err) {
     next(err);
-  } else {
-    const token = jwt.sign(
-      { usuario: resultadoUsuario },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "30d",
-      }
-    );
-
-    res.json({ token });
   }
 });
 
