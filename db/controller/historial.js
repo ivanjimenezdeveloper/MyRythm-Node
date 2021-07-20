@@ -4,10 +4,9 @@ const Historial = require("../model/Historial");
 
 const listarHistorialPorUsuario = async (idUser) => {
   try {
-    const lista = await Historial.find({
+    const lista = await Historial.findOne({
       user: idUser,
     }).populate("canciones.idCancion");
-
     const listaFormateada = await Cancion.populate(lista, {
       path: "canciones.idCancion.genero",
       model: Genero,

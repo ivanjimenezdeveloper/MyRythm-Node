@@ -68,6 +68,49 @@ const crearUsuario = async (user, sesion) => {
   }
 };
 
+const generarGenerosFavoritos = async (historial, idUsuario) => {
+  console.log(historial);
+  const { canciones } = historial;
+
+  const cancionesOrdenadas = canciones.sort(
+    (a, b) => new Date(b.fecha) - new Date(a.fecha)
+  );
+  console.log(canciones);
+
+  const generosPorCancion = cancionesOrdenadas.map(
+    (cancion) => cancion.idCancion.genero._id
+  );
+
+  const cantidadDeIteraciones =
+    generosPorCancion.length >= 10 ? 10 : generosPorCancion.length;
+
+  const generosContados = {};
+
+  for (let i = 0; i < cantidadDeIteraciones; i++) {
+    if (generosContados[generosPorCancion[i]]) {
+      generosContados[generosPorCancion[i]] += 1;
+    } else {
+      generosContados[generosPorCancion[i]] = 1;
+    }
+  }
+
+  const generosNombres = Object.getOwnPropertyNames(generosContados);
+
+  console.log(idUsuario, generosNombres);
+  try {
+    const respuesta = await User.findByIdAndUpdate(idUsuario, {
+      generosPreferidos: generosNombres,
+    });
+
+    console.log(respuesta);
+  } catch (err) {
+    throw crearError(
+      "No se ha podido generar la lista de generos favoritos",
+      500
+    );
+  }
+};
+
 module.exports = {
   getUsuario,
   loginUsuario,
@@ -75,4 +118,5 @@ module.exports = {
   crearUsuario,
   existeEmail,
   updatePasswordUsuarioPorId,
+  generarGenerosFavoritos,
 };

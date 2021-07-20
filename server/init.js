@@ -9,7 +9,6 @@ const { listarGeneros } = require("../db/controller/genero");
 const { listarAmigosPorId } = require("../db/controller/amigos");
 const { listarMatchesPorId } = require("../db/controller/matches");
 const { listarArtistas } = require("../db/controller/artista");
-const { listarHistorialPorUsuario } = require("../db/controller/historial");
 const {
   listarListasReproduccionPorUsuario,
 } = require("../db/controller/listaReproduccion");
