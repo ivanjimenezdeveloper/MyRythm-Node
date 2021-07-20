@@ -69,13 +69,11 @@ const crearUsuario = async (user, sesion) => {
 };
 
 const generarGenerosFavoritos = async (historial, idUsuario) => {
-  console.log(historial);
   const { canciones } = historial;
 
   const cancionesOrdenadas = canciones.sort(
     (a, b) => new Date(b.fecha) - new Date(a.fecha)
   );
-  console.log(canciones);
 
   const generosPorCancion = cancionesOrdenadas.map(
     (cancion) => cancion.idCancion.genero._id
@@ -93,16 +91,12 @@ const generarGenerosFavoritos = async (historial, idUsuario) => {
       generosContados[generosPorCancion[i]] = 1;
     }
   }
-
   const generosNombres = Object.getOwnPropertyNames(generosContados);
 
-  console.log(idUsuario, generosNombres);
   try {
     const respuesta = await User.findByIdAndUpdate(idUsuario, {
       generosPreferidos: generosNombres,
     });
-
-    console.log(respuesta);
   } catch (err) {
     throw crearError(
       "No se ha podido generar la lista de generos favoritos",

@@ -6,4 +6,10 @@ const listarCanciones = async () => {
   return lista;
 };
 
-module.exports = { listarCanciones };
+const getCancion = async (idCancion) => {
+  const cancion = await Cancion.findById(idCancion);
+
+  return cancion;
+};
+
+module.exports = { listarCanciones, getCancion };

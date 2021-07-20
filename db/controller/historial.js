@@ -1,6 +1,10 @@
 const Cancion = require("../model/Cancion");
+const User = require("../model/User");
 const Genero = require("../model/Genero");
 const Historial = require("../model/Historial");
+const { getCancion } = require("./cancion");
+const { crearError } = require("../../utilities/errores");
+const { generarGenerosFavoritos } = require("./user");
 
 const listarHistorialPorUsuario = async (idUser) => {
   try {
@@ -36,4 +40,45 @@ const crearHistorialUsuario = async (idUser, sesion) => {
   return true;
 };
 
-module.exports = { listarHistorialPorUsuario, crearHistorialUsuario };
+const reproduccionCancion = async (idCancion, idUsuario) => {
+  try {
+    const existeCancion = await getCancion(idCancion);
+
+    const fechaActual = Date.now();
+
+    await Historial.findOneAndUpdate(
+      { user: idUsuario },
+      { $push: { canciones: { idCancion, fecha: fechaActual } } },
+      async (err, result) => {
+        if (err) {
+          const error = crearError(
+            "No se ha podido añadir la cancion al historial",
+            500
+          );
+          throw error;
+        }
+      }
+    );
+
+    await generarGenerosFavoritos(
+      await listarHistorialPorUsuario(idUsuario),
+      idUsuario
+    );
+
+    if (!existeCancion) {
+      const error = new Error("No existe la cancion especificada");
+      error.codigo = 403;
+      throw error;
+    }
+  } catch (err) {
+    const error = new Error("No se ha podido añadir la cancion al historial");
+    error.codigo = 500;
+    throw error;
+  }
+};
+
+module.exports = {
+  listarHistorialPorUsuario,
+  crearHistorialUsuario,
+  reproduccionCancion,
+};
