@@ -7,6 +7,14 @@ const listarCanciones = async () => {
   return lista;
 };
 
+const listarCancionesCoincidencias = async (nombreABuscar) => {
+  const lista = await Cancion.find({
+    nombre: { $regex: nombreABuscar, $options: "i" },
+  });
+
+  return lista;
+};
+
 const getCancion = async (idCancion) => {
   const cancion = await Cancion.findById(idCancion);
 
@@ -17,4 +25,4 @@ const getCancion = async (idCancion) => {
   return cancion;
 };
 
-module.exports = { listarCanciones, getCancion };
+module.exports = { listarCanciones, getCancion, listarCancionesCoincidencias };
