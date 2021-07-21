@@ -2,16 +2,6 @@ require("dotenv").config();
 const debug = require("debug")("api-myrythm:db:conexion");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
-const {
-  listarHistorialPorUsuario,
-  reproduccionCancion,
-} = require("./controller/historial");
-const {
-  updatePasswordUsuarioPorId,
-  generarGenerosFavoritos,
-} = require("./controller/user");
-
-let sesion;
 
 const conectaMongo = async (callback) => {
   mongoose.connect(
@@ -29,14 +19,9 @@ const conectaMongo = async (callback) => {
         return;
       }
       debug(chalk.magentaBright("Base de datos iniciada"));
-
-      // reproduccionCancion(
-      //   "60f14180752b265a55524aa9",
-      //   "60f14390752b265a55524ad2"
-      // );
       callback();
     }
   );
 };
 
-module.exports = { conectaMongo, sesion };
+module.exports = { conectaMongo };
