@@ -74,7 +74,7 @@ router.post(
   "/registro",
   body("user", "Formato de nombre de usuario incorrecto").isAscii(),
   body("pass", "Formato de password incorrecto").isAscii(),
-  body("email", "Formato de email incorrecto").isAscii(),
+  body("email", "Formato de email incorrecto").isEmail(),
   body("localizacion", "Localización no es una id de mongo").isMongoId(),
   (req, res, next) => {
     const errores = validationResult(req);
