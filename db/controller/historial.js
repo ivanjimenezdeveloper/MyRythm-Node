@@ -18,24 +18,21 @@ const listarHistorialPorUsuario = async (idUser) => {
 
     return listaFormateada;
   } catch (err) {
-    const error = new Error("Error con la ID de usuario");
-    error.codigo = 404;
-    throw error;
+    throw crearError("Error con la ID de usuario", 403);
   }
 };
 
 const crearHistorialUsuario = async (idUser, sesion) => {
   try {
-    const historial = Historial.create({
+    const historial = await Historial.create({
       canciones: [],
       user: idUser,
     });
   } catch (err) {
-    const error = new Error(
-      "No se ha podido crear el historial para el usuario indicado"
+    throw crearError(
+      "No se ha podido crear el historial para el usuario indicado",
+      500
     );
-    error.codigo = 500;
-    throw error;
   }
   return true;
 };
@@ -66,14 +63,10 @@ const reproduccionCancion = async (idCancion, idUsuario) => {
     );
 
     if (!existeCancion) {
-      const error = new Error("No existe la cancion especificada");
-      error.codigo = 403;
-      throw error;
+      throw crearError("No existe la cancion especificada", 403);
     }
   } catch (err) {
-    const error = new Error("No se ha podido añadir la cancion al historial");
-    error.codigo = 500;
-    throw error;
+    throw crearError("No se ha podido añadir la cancion al historial", 500);
   }
 };
 
