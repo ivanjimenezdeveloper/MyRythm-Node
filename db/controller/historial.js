@@ -48,7 +48,7 @@ const reproduccionCancion = async (idCancion, idUsuario) => {
 
     await Historial.findOneAndUpdate(
       { user: idUsuario },
-      { $push: { canciones: { idCancion, fecha: fechaActual } } },
+      { $addToSet: { canciones: { idCancion, fecha: fechaActual } } },
       async (err, result) => {
         if (err) {
           const error = crearError(
