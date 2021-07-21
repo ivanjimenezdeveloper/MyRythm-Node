@@ -15,6 +15,7 @@ const {
 const { listarLocalizaciones } = require("../db/controller/localizacion");
 const routerUsuario = require("./rutas/user");
 const routerHistorial = require("./rutas/historial");
+const routerCancion = require("./rutas/cancion");
 
 const app = express();
 
@@ -57,6 +58,7 @@ const iniciaServidor = () => {
 
   app.use("/usuario", routerUsuario);
   app.use("/historial", authMiddleware, routerHistorial);
+  app.use("/cancion", authMiddleware, routerCancion);
 
   app.get("/generos", async (req, res, next) => {
     const generos = await listarGeneros();
