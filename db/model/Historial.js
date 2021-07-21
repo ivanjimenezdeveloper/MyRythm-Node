@@ -10,6 +10,7 @@ const HistorialSchema = new Schema({
         required: true,
       },
       fecha: { type: Schema.Types.Date, required: true },
+      _id: false,
     },
   ],
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
