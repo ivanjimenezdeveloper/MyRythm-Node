@@ -25,8 +25,8 @@ const router = express.Router();
 
 router.post(
   "/login",
-  body("user", "Formato de nombre de usuario incorrecto").isAlphanumeric(),
-  body("pass", "Formato de password incorrecto").isAlphanumeric(),
+  body("user", "Formato de nombre de usuario incorrecto").isAscii(),
+  body("pass", "Formato de password incorrecto").isAscii(),
   (req, res, next) => {
     const errores = validationResult(req);
     if (!errores.isEmpty()) {
@@ -72,9 +72,9 @@ router.post(
 
 router.post(
   "/registro",
-  body("user", "Formato de nombre de usuario incorrecto").isAlphanumeric(),
-  body("pass", "Formato de password incorrecto").isAlphanumeric(),
-  body("email", "Formato de email incorrecta").isAlphanumeric(),
+  body("user", "Formato de nombre de usuario incorrecto").isAscii(),
+  body("pass", "Formato de password incorrecto").isAscii(),
+  body("email", "Formato de email incorrecto").isAscii(),
   body("localizacion", "Localización no es una id de mongo").isMongoId(),
   (req, res, next) => {
     const errores = validationResult(req);
