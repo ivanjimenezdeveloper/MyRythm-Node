@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const { crearError } = require("../../utilities/errores");
+const { ordenarPorFecha } = require("../../utilities/utils");
 const User = require("../model/User");
 
 const getUsuario = (idUsuario) => {
@@ -68,17 +69,7 @@ const crearUsuario = async (user, sesion) => {
   }
 };
 
-const generarGenerosFavoritos = async (historial, idUsuario) => {
-  const { canciones } = historial;
-
-  const cancionesOrdenadas = canciones.sort(
-    (a, b) => new Date(b.fecha) - new Date(a.fecha)
-  );
-
-  const generosPorCancion = cancionesOrdenadas.map(
-    (cancion) => cancion.idCancion.genero._id
-  );
-
+const contarGenerosPorHistorial = (generosPorCancion) => {
   const cantidadDeIteraciones =
     generosPorCancion.length >= 10 ? 10 : generosPorCancion.length;
 
@@ -91,12 +82,25 @@ const generarGenerosFavoritos = async (historial, idUsuario) => {
       generosContados[generosPorCancion[i]] = 1;
     }
   }
-  const generosNombres = Object.getOwnPropertyNames(generosContados);
+  return Object.getOwnPropertyNames(generosContados);
+};
 
+const generarGenerosFavoritos = async (historial, idUsuario) => {
+  const { canciones } = historial;
+
+  const cancionesOrdenadas = canciones.sort(ordenarPorFecha);
+
+  const generosPorCancion = cancionesOrdenadas.map(
+    (cancion) => cancion.idCancion.genero._id
+  );
+
+  const generosNombres = contarGenerosPorHistorial(generosPorCancion);
   try {
     const respuesta = await User.findByIdAndUpdate(idUsuario, {
       generosPreferidos: generosNombres,
     });
+
+    return true;
   } catch (err) {
     throw crearError(
       "No se ha podido generar la lista de generos favoritos",

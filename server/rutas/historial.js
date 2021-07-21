@@ -10,6 +10,7 @@ const {
   reproduccionCancion,
 } = require("../../db/controller/historial");
 const { crearError } = require("../../utilities/errores");
+const { ordenarPorFecha } = require("../../utilities/utils");
 
 const router = express.Router();
 
@@ -26,11 +27,11 @@ router.get(
     }
     next();
   },
+
   async (req, res, next) => {
     const { idUsuario } = req.params;
     try {
       const lista = await listarHistorialPorUsuario(idUsuario);
-
       if (!lista.canciones.length) {
         next(
           await crearError(
@@ -39,7 +40,12 @@ router.get(
           )
         );
       } else {
-        res.json(lista);
+        let listaOrdenada = lista.canciones.sort(ordenarPorFecha);
+        if (listaOrdenada.length > 10) {
+          listaOrdenada = Array.from(listaOrdenada);
+          listaOrdenada.length = 10;
+        }
+        res.json(listaOrdenada);
       }
     } catch (err) {
       next(err);
