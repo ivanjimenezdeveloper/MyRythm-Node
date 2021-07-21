@@ -108,7 +108,7 @@ const iniciaServidor = () => {
   app.use((err, req, res, next) => {
     const codigo = err.codigo || 500;
     const mensaje = err.codigo ? err.message : "Pete general";
-    if (err.mensaje.includes("Token caducado")) {
+    if (mensaje.includes("Token caducado")) {
       err.expired = true;
     }
     console.log(err.message);
