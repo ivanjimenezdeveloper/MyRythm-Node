@@ -127,4 +127,36 @@ router.post(
   }
 );
 
+router.get(
+  "/:idUsuario",
+  check("idUsuario", "Id incorrecta").isMongoId(),
+  (req, res, next) => {
+    const errores = validationResult(req);
+    if (!errores.isEmpty()) {
+      console.log(errores.array());
+      const nuevoError = new Error(errores.array().map((error) => error.msg));
+      nuevoError.codigo = 400;
+      return next(nuevoError);
+    }
+    next();
+  },
+  async (req, res, next) => {
+    const { idUsuario } = req.params;
+    try {
+      const usuario = await getUsuario(idUsuario);
+
+      if (!usuario.username) {
+        throw crearError(
+          "No existe ningun usuario con la id especificada",
+          404
+        );
+      }
+
+      res.json(usuario);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 module.exports = router;

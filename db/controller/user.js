@@ -3,8 +3,8 @@ const { crearError } = require("../../utilities/errores");
 const { ordenarPorFecha } = require("../../utilities/utils");
 const User = require("../model/User");
 
-const getUsuario = (idUsuario) => {
-  const usuario = User.findOne({ _id: idUsuario });
+const getUsuario = async (idUsuario) => {
+  const usuario = await User.findOne({ _id: idUsuario }).select("-password");
 
   return usuario;
 };
