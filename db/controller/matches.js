@@ -31,7 +31,7 @@ const crearListaMatches = async (idUser, sesion) => {
 
 const generarMatchesParaUsuario = async (idUsuario) => {
   const generosUsuario = await getGenerosFavoritos(idUsuario);
-  const personasCoincidencia = await await getPersonasCoincidenciaGeneros(
+  const personasCoincidencia = await getPersonasCoincidenciaGeneros(
     generosUsuario,
     idUsuario
   );
@@ -101,7 +101,7 @@ const anyadirMatch = async (idUsuario, idMatch, resultado) => {
     const matchesUsuario = await Matches.findOne({ user: idUsuario });
 
     if (!matchesUsuario) {
-      throw crearError("No existe el usuario indicado", 404);
+      throw crearError("No existen matches para el usuario indicado", 404);
     }
 
     const existeMatch = existeEntradaMatch(matchesUsuario, idMatch, resultado);
@@ -123,9 +123,63 @@ const anyadirMatch = async (idUsuario, idMatch, resultado) => {
   }
 };
 
+const existeMatchPositivo = async (idUsuario, idMatch) => {
+  const matchesUsuario = await Matches.findOne({ user: idUsuario._id });
+  for (const match of matchesUsuario.matches) {
+    if (match.idMatch._id.toString() === idMatch) {
+      if (match.aceptado) {
+        return { estado: true, usuario: idUsuario };
+      }
+      return { estado: false };
+    }
+  }
+
+  return false;
+};
+
+const getMatchesPositivos = async ({ matches }, idUsuario) => {
+  const listaPositivos = [];
+  const listaPromesas = [];
+  try {
+    for (const match of matches) {
+      if (match.aceptado) {
+        listaPromesas.push(existeMatchPositivo(match.idMatch, idUsuario));
+      }
+    }
+  } catch (err) {
+    console.log(err.message);
+  }
+  const listaPromesasResueltas = await Promise.all(listaPromesas);
+
+  for (const persona of listaPromesasResueltas) {
+    if (persona.estado) listaPositivos.push(persona.usuario);
+  }
+
+  return listaPositivos;
+};
+
+const listaMatchesPositivos = async (idUsuario) => {
+  try {
+    const matchesUsuario = await Matches.findOne({ user: idUsuario }).populate(
+      "matches.idMatch",
+      "-password"
+    );
+    if (matchesUsuario.matches.length === 0) {
+      return [];
+    }
+    const listaMatches = await getMatchesPositivos(matchesUsuario, idUsuario);
+
+    return listaMatches;
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
 module.exports = {
   listarMatchesPorId,
   crearListaMatches,
   generarMatchesParaUsuario,
   anyadirMatch,
+  listaMatchesPositivos,
+  getMatchesPositivos,
 };

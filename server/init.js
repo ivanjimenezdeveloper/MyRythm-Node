@@ -74,13 +74,6 @@ const iniciaServidor = () => {
     res.json(lista);
   });
 
-  app.get("/matches/:idUsuario", async (req, res, next) => {
-    const { idUsuario } = req.params;
-    const lista = await listarMatchesPorId(idUsuario);
-
-    res.json(lista);
-  });
-
   app.get("/artista/artistas", async (req, res, next) => {
     const lista = await listarArtistas();
 
