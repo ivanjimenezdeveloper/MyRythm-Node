@@ -171,7 +171,7 @@ const listaMatchesPositivos = async (idUsuario) => {
 
     return listaMatches;
   } catch (err) {
-    console.log(err.message);
+    throw crearError("No se ha podido extraer la lista de matches", 500);
   }
 };
 

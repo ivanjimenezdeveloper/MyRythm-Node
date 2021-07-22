@@ -74,8 +74,11 @@ router.put(
 
 router.get("/listaMatches", async (req, res, next) => {
   const { idUsuario } = req;
-
-  res.json(await listaMatchesPositivos(idUsuario));
+  try {
+    res.json(await listaMatchesPositivos(idUsuario));
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.get(

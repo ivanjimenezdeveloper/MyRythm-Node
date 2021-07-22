@@ -17,6 +17,7 @@ const routerUsuario = require("./rutas/user");
 const routerHistorial = require("./rutas/historial");
 const routerCancion = require("./rutas/cancion");
 const routerMatches = require("./rutas/matches");
+const routerAmigos = require("./rutas/amigos");
 
 const app = express();
 
@@ -61,6 +62,7 @@ const iniciaServidor = () => {
   app.use("/historial", authMiddleware, routerHistorial);
   app.use("/cancion", authMiddleware, routerCancion);
   app.use("/matches", authMiddleware, routerMatches);
+  app.use("/amigos", authMiddleware, routerAmigos);
 
   app.get("/generos", async (req, res, next) => {
     const generos = await listarGeneros();
