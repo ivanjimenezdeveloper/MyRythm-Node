@@ -8,6 +8,8 @@ const {
 const {
   generarMatchesParaUsuario,
   anyadirMatch,
+  getMatchesPositivos,
+  listaMatchesPositivos,
 } = require("../../db/controller/matches");
 const {
   getGenerosFavoritos,
@@ -17,31 +19,6 @@ const { crearError } = require("../../utilities/errores");
 const { ordenarPorFecha } = require("../../utilities/utils");
 
 const router = express.Router();
-
-router.get(
-  "/:idUsuario",
-  check("idUsuario", "Id incorrecta").isMongoId(),
-  (req, res, next) => {
-    const errores = validationResult(req);
-    if (!errores.isEmpty()) {
-      console.log(errores.array());
-      const nuevoError = new Error(errores.array().map((error) => error.msg));
-      nuevoError.codigo = 400;
-      return next(nuevoError);
-    }
-    next();
-  },
-  async (req, res, next) => {
-    const { idUsuario } = req.params;
-    try {
-      const listado = await generarMatchesParaUsuario(idUsuario);
-
-      res.json(listado);
-    } catch (err) {
-      next(err);
-    }
-  }
-);
 
 router.put(
   "/positivo/:idMatch",
@@ -89,6 +66,37 @@ router.put(
       await anyadirMatch(idUsuario, idMatch, false);
 
       res.json({ cambio: true });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.get("/listaMatches", async (req, res, next) => {
+  const { idUsuario } = req;
+
+  res.json(await listaMatchesPositivos(idUsuario));
+});
+
+router.get(
+  "/:idUsuario",
+  check("idUsuario", "Id incorrecta").isMongoId(),
+  (req, res, next) => {
+    const errores = validationResult(req);
+    if (!errores.isEmpty()) {
+      console.log(errores.array());
+      const nuevoError = new Error(errores.array().map((error) => error.msg));
+      nuevoError.codigo = 400;
+      return next(nuevoError);
+    }
+    next();
+  },
+  async (req, res, next) => {
+    const { idUsuario } = req.params;
+    try {
+      const listado = await generarMatchesParaUsuario(idUsuario);
+
+      res.json(listado);
     } catch (err) {
       next(err);
     }
