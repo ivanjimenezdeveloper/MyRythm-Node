@@ -109,6 +109,27 @@ const generarGenerosFavoritos = async (historial, idUsuario) => {
   }
 };
 
+const getGenerosFavoritos = async (idUsuario) => {
+  const generos = await User.findById(idUsuario).select(
+    "generosPreferidos -_id"
+  );
+
+  return generos;
+};
+
+const getPersonasCoincidenciaGeneros = async (
+  { generosPreferidos },
+  idUsuario
+) => {
+  console.log(generosPreferidos);
+  const personas = await User.find({
+    generosPreferidos: { $in: generosPreferidos },
+    _id: { $ne: idUsuario },
+  }).select("-password");
+
+  return personas;
+};
+
 module.exports = {
   getUsuario,
   loginUsuario,
@@ -117,4 +138,6 @@ module.exports = {
   existeEmail,
   updatePasswordUsuarioPorId,
   generarGenerosFavoritos,
+  getGenerosFavoritos,
+  getPersonasCoincidenciaGeneros,
 };

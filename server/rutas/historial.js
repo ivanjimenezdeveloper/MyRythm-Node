@@ -56,7 +56,7 @@ router.get(
 router.get(
   "/reproducirCancion/:idCancion",
   check("idCancion", "Id incorrecta").isMongoId(),
-  (req, res, next) => {
+  async (req, res, next) => {
     const errores = validationResult(req);
     if (!errores.isEmpty()) {
       console.log(errores.array());
@@ -70,7 +70,7 @@ router.get(
     const { idCancion } = req.params;
 
     try {
-      reproduccionCancion(idCancion, req.idUsuario);
+      await reproduccionCancion(idCancion, req.idUsuario);
       res.json({ estado: true });
     } catch (err) {
       next(err);
