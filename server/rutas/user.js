@@ -50,6 +50,7 @@ router.post(
         const resultadoUsuarioSeguro = {
           _id: resultadoUsuario._id,
           username: resultadoUsuario.username,
+          generosPreferidos: resultadoUsuario.generosPreferidos,
           urlFoto: resultadoUsuario.urlFoto,
           localizacion: resultadoUsuario.localizacion,
           email: resultadoUsuario.email,
