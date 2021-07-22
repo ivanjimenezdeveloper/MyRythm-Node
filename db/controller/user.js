@@ -6,7 +6,7 @@ const User = require("../model/User");
 const getUsuario = async (idUsuario) => {
   const usuario = await User.findOne({ _id: idUsuario })
     .select("-password")
-    .populate("localizacion");
+    .populate("localizacion generosPreferidos");
 
   return usuario;
 };
