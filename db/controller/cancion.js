@@ -10,7 +10,7 @@ const listarCanciones = async () => {
 const listarCancionesCoincidencias = async (nombreABuscar) => {
   const lista = await Cancion.find({
     nombre: { $regex: nombreABuscar, $options: "i" },
-  });
+  }).populate("artista");
 
   return lista;
 };

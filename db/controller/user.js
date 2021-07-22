@@ -4,14 +4,16 @@ const { ordenarPorFecha } = require("../../utilities/utils");
 const User = require("../model/User");
 
 const getUsuario = async (idUsuario) => {
-  const usuario = await User.findOne({ _id: idUsuario }).select("-password");
+  const usuario = await User.findOne({ _id: idUsuario })
+    .select("-password")
+    .populate("localizacion");
 
   return usuario;
 };
 
 const updatePasswordUsuarioPorId = async (idUsuario, datos) => {
   const usuario = await getUsuario(idUsuario);
-  const passwordModificada = await bcrypt.hash("ayyba", 10);
+  const passwordModificada = await bcrypt.hash(datos, 10);
   const usuarioModificado = await User.findByIdAndUpdate(
     { _id: idUsuario },
     { password: passwordModificada }
@@ -21,7 +23,9 @@ const updatePasswordUsuarioPorId = async (idUsuario, datos) => {
 };
 const loginUsuario = async (username, password) => {
   try {
-    const usuario = await User.findOne({ username });
+    const usuario = await User.findOne({ username }).populate(
+      "localizacion generosPreferidos"
+    );
 
     if (!usuario.username) {
       throw crearError("Credenciales incorrectas", 403);
@@ -51,7 +55,7 @@ const existeEmail = async (email) => {
   const usuario = await User.findOne({ email });
   return usuario || false;
 };
-const crearUsuario = async (user, sesion) => {
+const crearUsuario = async (user) => {
   const { pass, urlFoto, localizacion, email } = user;
   try {
     const contrasenyaEncriptada = await bcrypt.hash(pass, 10);

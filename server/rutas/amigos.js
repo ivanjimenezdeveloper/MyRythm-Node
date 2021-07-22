@@ -6,13 +6,6 @@ const {
   body,
 } = require("express-validator");
 const { listaAmigosPositivos } = require("../../db/controller/amigos");
-const {
-  getCancion,
-  listarCanciones,
-  listarCancionesCoincidencias,
-} = require("../../db/controller/cancion");
-
-const { crearError } = require("../../utilities/errores");
 
 const router = express.Router();
 

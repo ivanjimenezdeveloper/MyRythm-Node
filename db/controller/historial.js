@@ -5,15 +5,21 @@ const Historial = require("../model/Historial");
 const { getCancion } = require("./cancion");
 const { crearError } = require("../../utilities/errores");
 const { generarGenerosFavoritos } = require("./user");
+const Artista = require("../model/Artista");
 
 const listarHistorialPorUsuario = async (idUser) => {
   try {
     const lista = await Historial.findOne({
       user: idUser,
     }).populate("canciones.idCancion");
-    const listaFormateada = await Cancion.populate(lista, {
+    let listaFormateada = await Cancion.populate(lista, {
       path: "canciones.idCancion.genero",
       model: Genero,
+    });
+
+    listaFormateada = await Artista.populate(listaFormateada, {
+      path: "canciones.idCancion.artista",
+      model: Artista,
     });
 
     return listaFormateada;
