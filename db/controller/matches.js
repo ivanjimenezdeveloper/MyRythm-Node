@@ -1,3 +1,4 @@
+const { crearError } = require("../../utilities/errores");
 const { shuffle } = require("../../utilities/utils");
 const Matches = require("../model/Matches");
 const User = require("../model/User");
@@ -14,9 +15,9 @@ const listarMatchesPorId = async (idUsuario) => {
   return lista;
 };
 
-const crearListaMatches = (idUser, sesion) => {
+const crearListaMatches = async (idUser, sesion) => {
   try {
-    const matches = Matches.create({
+    const matches = await Matches.create({
       matches: [],
       user: idUser,
     });
@@ -70,8 +71,61 @@ const generarMatchesParaUsuario = async (idUsuario) => {
   };
 };
 
+const existeEntradaMatch = (listaMatches, idMatchComprobar) => {
+  const { matches } = listaMatches;
+
+  for (const match of matches) {
+    if (match.idMatch.toString() === idMatchComprobar) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+const cambiaEntrada = (listaMatches, idMatchComprobar, resultado) => {
+  const { matches } = listaMatches;
+
+  for (const match of matches) {
+    if (match.idMatch.toString() === idMatchComprobar) {
+      match.aceptado = resultado;
+      return;
+    }
+  }
+
+  return false;
+};
+
+const anyadirMatch = async (idUsuario, idMatch, resultado) => {
+  try {
+    const matchesUsuario = await Matches.findOne({ user: idUsuario });
+
+    if (!matchesUsuario) {
+      throw crearError("No existe el usuario indicado", 404);
+    }
+
+    const existeMatch = existeEntradaMatch(matchesUsuario, idMatch, resultado);
+
+    if (existeMatch) {
+      cambiaEntrada(matchesUsuario, idMatch, resultado);
+      matchesUsuario.save();
+      return;
+    }
+    await Matches.findOneAndUpdate(
+      { user: idUsuario },
+      { $addToSet: { matches: { idMatch, aceptado: resultado } } }
+    );
+  } catch (err) {
+    if (!err.codigo) {
+      throw crearError("No se ha podido añadir el Match", 500);
+    }
+    throw err;
+  }
+};
+
 module.exports = {
   listarMatchesPorId,
   crearListaMatches,
   generarMatchesParaUsuario,
+  anyadirMatch,
 };
