@@ -129,7 +129,9 @@ const getPersonasCoincidenciaGeneros = async (
   const personas = await User.find({
     generosPreferidos: { $in: generosPreferidos },
     _id: { $ne: idUsuario },
-  }).select("-password");
+  })
+    .select("-password")
+    .populate("localizacion");
 
   return personas;
 };
