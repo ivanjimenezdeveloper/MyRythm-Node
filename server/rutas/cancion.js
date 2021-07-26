@@ -10,34 +10,11 @@ const {
   listarCanciones,
   listarCancionesCoincidencias,
 } = require("../../db/controller/cancion");
+const { getListaMegusta } = require("../../db/controller/listaReproduccion");
 
 const { crearError } = require("../../utilities/errores");
 
 const router = express.Router();
-
-router.get(
-  "/:idCancion",
-  check("idCancion", "Id incorrecta").isMongoId(),
-  (req, res, next) => {
-    const errores = validationResult(req);
-    if (!errores.isEmpty()) {
-      console.log(errores.array());
-      const nuevoError = new Error(errores.array().map((error) => error.msg));
-      nuevoError.codigo = 400;
-      return next(nuevoError);
-    }
-    next();
-  },
-  async (req, res, next) => {
-    const { idCancion } = req.params;
-    try {
-      const cancion = await getCancion(idCancion);
-      res.json(cancion);
-    } catch (err) {
-      next(err);
-    }
-  }
-);
 
 router.get("/", async (req, res, next) => {
   try {
@@ -48,6 +25,18 @@ router.get("/", async (req, res, next) => {
     }
 
     res.json(canciones);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/listaMegusta", async (req, res, next) => {
+  const { idUsuario } = req;
+
+  try {
+    const lista = await getListaMegusta(idUsuario);
+
+    res.json(lista);
   } catch (err) {
     next(err);
   }
@@ -81,6 +70,30 @@ router.get(
       }
 
       res.json(canciones);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+router.get(
+  "/:idCancion",
+  check("idCancion", "Id incorrecta").isMongoId(),
+  (req, res, next) => {
+    const errores = validationResult(req);
+    if (!errores.isEmpty()) {
+      console.log(errores.array());
+      const nuevoError = new Error(errores.array().map((error) => error.msg));
+      nuevoError.codigo = 400;
+      return next(nuevoError);
+    }
+    next();
+  },
+  async (req, res, next) => {
+    const { idCancion } = req.params;
+    try {
+      const cancion = await getCancion(idCancion);
+      res.json(cancion);
     } catch (err) {
       next(err);
     }
